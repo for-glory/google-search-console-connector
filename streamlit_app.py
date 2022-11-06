@@ -6,6 +6,7 @@ import pandas as pd
 import searchconsole
 from apiclient import discovery
 from google_auth_oauthlib.flow import Flow
+from google.oauth2.credentials import Credentials
 
 # imports for aggrid
 from st_aggrid import AgGrid
@@ -89,8 +90,9 @@ with tab1:
         # st.write(st.session_state.my_token_input)
         st.session_state.my_token_received = True
 
-    oauthtoken = my_component("World")
-
+    with st.sidebar:
+        oauthtoken = my_component("World")
+        
     with st.sidebar.form(key="my_form"):
         st.session_state["my_token_input"] = oauthtoken
 
@@ -98,16 +100,16 @@ with tab1:
 
         mt = Elements()
 
-        mt.button(
-            "Sign-in with Google",
-            target="_blank",
-            size="large",
-            variant="contained",
-            start_icon=mt.icons.exit_to_app,
-            onclick="none",
-            style={"color": "#FFFFFF", "background": "#FF4B4B"},
-            href="https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=686079794781-0bt8ot3ie81iii7i17far5vj4s0p20t7.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fwebmasters.readonly&state=vryYlMrqKikWGlFVwqhnMpfqr1HMiq&prompt=consent&access_type=offline",
-        )
+        # mt.button(
+        #     "Sign-in with Google",
+        #     target="_blank",
+        #     size="large",
+        #     variant="contained",
+        #     start_icon=mt.icons.exit_to_app,
+        #     onclick="none",
+        #     style={"color": "#FFFFFF", "background": "#FF4B4B"},
+        #     # href="https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=686079794781-0bt8ot3ie81iii7i17far5vj4s0p20t7.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fwebmasters.readonly&state=vryYlMrqKikWGlFVwqhnMpfqr1HMiq&prompt=consent&access_type=offline",
+        # )
 
         mt.show(key="687")
 
@@ -121,11 +123,11 @@ with tab1:
             }
         }
 
-        flow = Flow.from_client_config(
-            credentials,
-            scopes=["https://www.googleapis.com/auth/webmasters.readonly"],
-            redirect_uri="urn:ietf:wg:oauth:2.0:oob",
-        )
+        # flow = Flow.from_client_config(
+        #     credentials,
+        #     scopes=["https://www.googleapis.com/auth/webmasters.readonly"],
+        #     redirect_uri="urn:ietf:wg:oauth:2.0:oob",
+        # )
 
         # auth_url, _ = flow.authorization_url(prompt="consent")
 
@@ -405,8 +407,9 @@ with tab1:
 
             @st.experimental_singleton
             def get_account_site_list_and_webproperty(token):
-                flow.fetch_token(code=token)
-                credentials = flow.credentials
+                # flow.fetch_token(code=token)
+                # credentials = flow.credentials
+                credentials = Credentials(token)
                 service = discovery.build(
                     serviceName="webmasters",
                     version="v3",
