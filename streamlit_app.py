@@ -5,7 +5,6 @@ import pandas as pd
 # imports for search console libraries
 import searchconsole
 from apiclient import discovery
-from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
 
 # imports for aggrid
@@ -74,10 +73,6 @@ with tab1:
 
     st.write("")
 
-    # Convert secrets from the TOML file to strings
-    clientSecret = str(st.secrets["installed"]["client_secret"])
-    clientId = str(st.secrets["installed"]["client_id"])
-
     st.markdown("")
 
     if "my_token_input" not in st.session_state:
@@ -92,44 +87,13 @@ with tab1:
 
     with st.sidebar:
         oauthtoken = my_component("World")
-        
+
     with st.sidebar.form(key="my_form"):
         st.session_state["my_token_input"] = oauthtoken
 
-        st.markdown("")
-
         mt = Elements()
 
-        # mt.button(
-        #     "Sign-in with Google",
-        #     target="_blank",
-        #     size="large",
-        #     variant="contained",
-        #     start_icon=mt.icons.exit_to_app,
-        #     onclick="none",
-        #     style={"color": "#FFFFFF", "background": "#FF4B4B"},
-        #     # href="https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=686079794781-0bt8ot3ie81iii7i17far5vj4s0p20t7.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fwebmasters.readonly&state=vryYlMrqKikWGlFVwqhnMpfqr1HMiq&prompt=consent&access_type=offline",
-        # )
-
         mt.show(key="687")
-
-        credentials = {
-            "installed": {
-                "client_id": clientId,
-                "client_secret": clientSecret,
-                "redirect_uris": [],
-                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                "token_uri": "https://accounts.google.com/o/oauth2/token",
-            }
-        }
-
-        # flow = Flow.from_client_config(
-        #     credentials,
-        #     scopes=["https://www.googleapis.com/auth/webmasters.readonly"],
-        #     redirect_uri="urn:ietf:wg:oauth:2.0:oob",
-        # )
-
-        # auth_url, _ = flow.authorization_url(prompt="consent")
 
         code = st.text_input(
             "Google Oauth token",
@@ -407,8 +371,6 @@ with tab1:
 
             @st.experimental_singleton
             def get_account_site_list_and_webproperty(token):
-                # flow.fetch_token(code=token)
-                # credentials = flow.credentials
                 credentials = Credentials(token)
                 service = discovery.build(
                     serviceName="webmasters",
